@@ -1,51 +1,33 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 import psycopg2
 import random
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "secret123"
+app.secret_key = "quiz_secret_123"
 
-# DB Connection
+# DB connection
 conn = psycopg2.connect(
-    dbname=os.getenv("DB_NAME"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    host=os.getenv("DB_HOST"),
-    port=os.getenv("DB_PORT")
+    dbname="your_db",
+    user="your_user",
+    password="your_pass",
+    host="localhost",
+    port="5432"
 )
 cur = conn.cursor()
 
 @app.route('/')
-def home():
-    return render_template('index.html')
+def index():
+    return render_template("index.html")
 
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        cur.execute("SELECT * FROM users WHERE email=%s AND password=%s", (email, password))
-        user = cur.fetchone()
-        if user:
-            session["user"] = email
-            return redirect(url_for('home'))
-        else:
-            return "Invalid credentials"
-    return render_template("login.html")
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect('/')
+@app.route('/set_name', methods=["POST"])
+def set_name():
+    session["player_name"] = request.form["player_name"]
+    return redirect(url_for("index"))
 
 @app.route('/quiz/<subject>')
 def quiz(subject):
-    if "user" not in session:
-        return redirect(url_for('login'))
+    if "player_name" not in session:
+        return redirect(url_for("index"))
     cur.execute("SELECT id, question, option_a, option_b, option_c, option_d FROM questions WHERE subject=%s ORDER BY RANDOM() LIMIT 5", (subject,))
     questions = cur.fetchall()
     return render_template("quiz.html", questions=questions, subject=subject)
@@ -63,7 +45,9 @@ def submit():
         if selected == correct:
             score += 1
 
-    return render_template("result.html", score=score, total=total, subject=subject)
+    return render_template("result.html", score=score, total=total, subject=subject, player=session["player_name"])
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/reset')
+def reset():
+    session.clear()
+    return redirect('/')
