@@ -6,17 +6,28 @@
 </head>
 <body>
   <h1>🌍 GK Quiz Game</h1>
-  {% if session.user %}
-    <p>Welcome {{ session.user }} | <a href="/logout">Logout</a></p>
-    <h2>Select a Subject</h2>
+
+  {% if session.player_name %}
+    <p>Hello, <strong>{{ session.player_name }}</strong>!</p>
+    <h2>Choose a Subject</h2>
     <ul>
       <li><a href="/quiz/Science">Science</a></li>
       <li><a href="/quiz/History">History</a></li>
-      <li><a href="/quiz/Geography">Geography</a></li>
       <li><a href="/quiz/Sports">Sports</a></li>
+      <li><a href="/quiz/Geography">Geography</a></li>
     </ul>
-  {% else %}
-    <a href="/login">Login</a> to play quizzes!
+    <a href="/reset">🔄 Change Name</a>
+  {% endif %}
+
+  <!-- Popup Form -->
+  {% if not session.player_name %}
+  <div id="popup" class="popup">
+    <form method="POST" action="/set_name" class="popup-content">
+      <h2>Welcome to GK Quiz</h2>
+      <input type="text" name="player_name" placeholder="Enter your name" required />
+      <button type="submit">Start Game</button>
+    </form>
+  </div>
   {% endif %}
 </body>
 </html>
