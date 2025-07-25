@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ subject }} Quiz</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h2>Subject: {{ subject }}</h2>
+  <p>Player: <strong>{{ session.player_name }}</strong></p>
+
+  <form action="/submit" method="POST">
+    <input type="hidden" name="subject" value="{{ subject }}">
+    <input type="hidden" name="total" value="{{ questions|length }}">
+
+    {% for q in questions %}
+      <div class="question-box">
+        <p><strong>{{ loop.index }}. {{ q[1] }}</strong></p>
+        <input type="hidden" name="qid" value="{{ q[0] }}">
+
+        <label><input type="radio" name="q_{{ q[0] }}" value="A" required> A. {{ q[2] }}</label><br>
+        <label><input type="radio" name="q_{{ q[0] }}" value="B"> B. {{ q[3] }}</label><br>
+        <label><input type="radio" name="q_{{ q[0] }}" value="C"> C. {{ q[4] }}</label><br>
+        <label><input type="radio" name="q_{{ q[0] }}" value="D"> D. {{ q[5] }}</label><br>
+      </div>
+      <hr>
+    {% endfor %}
+
+    <button type="submit">✅ Submit Quiz</button>
+  </form>
+</body>
+</html>
