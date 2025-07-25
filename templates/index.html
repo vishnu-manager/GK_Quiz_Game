@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GK Quiz Game</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>🌍 GK Quiz Game</h1>
+  {% if session.user %}
+    <p>Welcome {{ session.user }} | <a href="/logout">Logout</a></p>
+    <h2>Select a Subject</h2>
+    <ul>
+      <li><a href="/quiz/Science">Science</a></li>
+      <li><a href="/quiz/History">History</a></li>
+      <li><a href="/quiz/Geography">Geography</a></li>
+      <li><a href="/quiz/Sports">Sports</a></li>
+    </ul>
+  {% else %}
+    <a href="/login">Login</a> to play quizzes!
+  {% endif %}
+</body>
+</html>
