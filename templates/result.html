@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz Result</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="result-container">
+    <h2>🎉 Quiz Completed!</h2>
+    <p><strong>Player:</strong> {{ player }}</p>
+    <p><strong>Subject:</strong> {{ subject }}</p>
+    <p><strong>Score:</strong> {{ score }} out of {{ total }}</p>
+
+    {% if score == total %}
+      <p>🔥 Excellent! Perfect Score!</p>
+    {% elif score >= total/2 %}
+      <p>👍 Good Job! Keep practicing.</p>
+    {% else %}
+      <p>👀 Don't worry! Try again to improve.</p>
+    {% endif %}
+
+    <br>
+    <a href="/">🏠 Back to Home</a> |
+    <a href="/quiz/{{ subject }}">🔁 Retry {{ subject }}</a>
+  </div>
+</body>
+</html>
